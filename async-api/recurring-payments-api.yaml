@@ -1,0 +1,46 @@
+asyncapi: 2.3.0
+info:
+  title: Recurring Payments API
+  version: '0.1.0'
+  description: | 
+    Recurring Payments API.
+    Accepts payment mandates related commands and produces mandate lifecycle related messages
+servers:
+  local:
+    url: amqp://localhost:5672
+    protocol: amqp
+    description: Local playground RabbitMQ server
+    security:
+      - user-password: []
+channels:
+  mandates/lifecycle:  
+    bindings:
+      amqp:
+        is: routingKey
+        exchange:
+          name: mandates
+          type: topic
+          durable: true
+          autoDelete: false
+          vhost: recurring-payments        
+    subscribe:
+      summary: Receive update on REC Payments API events
+      operationId: recUpdate
+      message:
+        name: RecUpdateEvent
+        # todo: investigate correlation id
+        payload:
+          type: object
+          properties:
+            id:
+              type: string
+              description: Id of the mandate to create
+            status:
+              type: string
+              description: status of the resource
+              example: "CREATED"          
+    
+components:
+  securitySchemes:
+    user-password:
+      type: userPassword
