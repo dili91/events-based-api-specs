@@ -4,7 +4,7 @@ info:
   version: '0.1.0'
   description: | 
     Recurring Payments API.
-    Accepts payment mandates related commands and produces mandate lifecycle related messages
+    Accepts payment mandates commands and produces mandate lifecycle related messages
 servers:
   local:
     url: amqp://localhost:5672
@@ -13,34 +13,35 @@ servers:
     security:
       - user-password: []
 channels:
-  mandates/lifecycle:  
-    bindings:
-      amqp:
-        is: routingKey
-        exchange:
-          name: mandates
-          type: topic
-          durable: true
-          autoDelete: false
-          vhost: recurring-payments        
+  mandate/created:
     subscribe:
-      summary: Receive update on REC Payments API events
-      operationId: recUpdate
+      summary: Receive a mandate created event
+      operationId: mandateCreated
       message:
-        name: RecUpdateEvent
-        # todo: investigate correlation id
-        payload:
-          type: object
-          properties:
-            id:
-              type: string
-              description: Id of the mandate to create
-            status:
-              type: string
-              description: status of the resource
-              example: "CREATED"          
+        $ref : '#/components/messages/MandateCreated'
     
 components:
   securitySchemes:
     user-password:
       type: userPassword
+  messages:
+    MandateCreated:
+      name: mandateCreated
+      title: Mandate created event
+      summary: Inform about a new mandate in the system
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/mandateCreatedPayload'
+  schemas:
+    mandateCreatedPayload:
+      type: object
+      properties:
+        id:
+          type: string
+          description: "the id of the mandate"
+        status:
+          type: string
+          description: "Status description"
+        createdAt:
+          type: string
+          format: date-time      
