@@ -13,7 +13,15 @@ servers:
     security:
       - user-password: []
 channels:
-  mandates/created:  
+  mandates/commands:
+    bindings:
+      $ref : '#/components/channelBindings/amqp'   
+    subscribe:
+      summary: Publish a create mandate command
+      operationId: createMandate
+      message:
+        $ref : '#/components/messages/CreateMandate'
+  mandates/lifecycle:  
     bindings:
       $ref : '#/components/channelBindings/amqp'   
     subscribe:
@@ -35,6 +43,12 @@ components:
         autoDelete: false
         vhost: recurring-payments
   messages:
+    CreateMandate: 
+      name: createMandateCommand
+      title: command to create a mandate
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/CreateMandatePayload'
     MandateCreated:
       name: mandateCreated
       title: Mandate created event
@@ -43,6 +57,15 @@ components:
       payload:
         $ref: '#/components/schemas/mandateCreatedPayload'
   schemas:
+    createMandatePayload:
+      type: object
+      properties:
+        id:
+          type: string
+          description: "the id of the mandate"
+        amount:
+          type: integer
+          description: "the amount of the mandate"
     mandateCreatedPayload:
       type: object
       properties:
