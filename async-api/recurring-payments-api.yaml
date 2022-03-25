@@ -48,7 +48,7 @@ components:
       title: command to create a mandate
       contentType: application/json
       payload:
-        $ref: '#/components/schemas/CreateMandatePayload'
+        $ref: '#/components/schemas/createMandatePayload'
     MandateCreated:
       name: mandateCreated
       title: Mandate created event
