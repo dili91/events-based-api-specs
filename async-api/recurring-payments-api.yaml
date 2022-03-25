@@ -16,7 +16,7 @@ channels:
   mandates/commands:
     bindings:
       $ref : '#/components/channelBindings/amqp'   
-    subscribe:
+    publish:
       summary: Publish a create mandate command
       operationId: createMandate
       message:
