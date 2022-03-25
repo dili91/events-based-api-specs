@@ -20,17 +20,16 @@ channels:
       summary: Receive a mandate created event
       operationId: mandateCreated
       message:
-        $ref : '#/components/messages/MandateCreated'    
-    
+        $ref : '#/components/messages/MandateCreated'
 components:
   securitySchemes:
     user-password:
       type: userPassword
-  bindings:
+  channelBindings:
     amqp:
       is: routingKey
       exchange:
-        name: mandates
+        name: recurring-payments
         type: topic
         durable: true
         autoDelete: false
