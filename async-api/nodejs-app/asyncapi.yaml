@@ -1,0 +1,87 @@
+asyncapi: 2.3.0
+info:
+  title: Recurring Payments API
+  version: '0.1.0'
+  description: | 
+    Recurring Payments API.
+    Accepts payment mandates commands and produces mandate lifecycle related messages
+servers:
+  local:
+    url: amqp://localhost:5672
+    protocol: amqp
+    description: Local playground RabbitMQ server
+    security:
+      - user-password: []
+channels:
+  mandates/commands:
+    bindings:
+      $ref : '#/components/channelBindings/amqp'   
+    publish:
+      summary: Publish a create mandate command
+      operationId: createMandate
+      message:
+        $ref : '#/components/messages/CreateMandate'
+  mandates/lifecycle:  
+    bindings:
+      $ref : '#/components/channelBindings/amqp'   
+    subscribe:
+      summary: Receive a mandate created event
+      operationId: mandateCreated
+      message:
+        $ref : '#/components/messages/MandateCreated'
+components:
+  securitySchemes:
+    user-password:
+      type: userPassword
+  channelBindings:
+    amqp:
+      is: routingKey
+      exchange:
+        name: recurring-payments
+        type: topic
+        durable: true
+        autoDelete: false
+        vhost: recurring-payments
+  messages:
+    CreateMandate: 
+      name: createMandateCommand
+      title: command to create a mandate
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/createMandatePayload'
+    MandateCreated:
+      name: mandateCreated
+      title: Mandate created event
+      summary: Inform about a new mandate in the system
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/mandateCreatedPayload'
+  schemas:
+    createMandatePayload:
+      type: object
+      required: 
+        - id
+        - amount
+      properties:
+        id:
+          type: string
+          description: "the id of the mandate"
+        amount:
+          type: integer
+          description: "the amount of the mandate"
+    mandateCreatedPayload:
+      type: object
+      required: 
+        - id
+        - status
+        - createdAt
+      properties:
+        id:
+          type: string
+          description: "the id of the mandate"
+        status:
+          type: string
+          description: "Status description"
+        createdAt:
+          type: string
+          format: date-time      
