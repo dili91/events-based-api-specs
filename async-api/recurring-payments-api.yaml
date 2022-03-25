@@ -13,17 +13,28 @@ servers:
     security:
       - user-password: []
 channels:
-  mandate/created:
+  mandates/created:  
+    bindings:
+      $ref : '#/components/bindings/amqp'   
     subscribe:
       summary: Receive a mandate created event
       operationId: mandateCreated
       message:
-        $ref : '#/components/messages/MandateCreated'
+        $ref : '#/components/messages/MandateCreated'    
     
 components:
   securitySchemes:
     user-password:
       type: userPassword
+  bindings:
+    amqp:
+      is: routingKey
+      exchange:
+        name: mandates
+        type: topic
+        durable: true
+        autoDelete: false
+        vhost: recurring-payments
   messages:
     MandateCreated:
       name: mandateCreated
