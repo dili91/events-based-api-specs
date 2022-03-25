@@ -59,6 +59,9 @@ components:
   schemas:
     createMandatePayload:
       type: object
+      required: 
+        - id
+        - amount
       properties:
         id:
           type: string
@@ -68,6 +71,10 @@ components:
           description: "the amount of the mandate"
     mandateCreatedPayload:
       type: object
+      required: 
+        - id
+        - status
+        - createdAt
       properties:
         id:
           type: string
