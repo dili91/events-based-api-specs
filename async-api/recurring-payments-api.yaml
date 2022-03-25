@@ -15,7 +15,7 @@ servers:
 channels:
   mandates/created:  
     bindings:
-      $ref : '#/components/bindings/amqp'   
+      $ref : '#/components/channelBindings/amqp'   
     subscribe:
       summary: Receive a mandate created event
       operationId: mandateCreated
