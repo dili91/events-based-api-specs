@@ -5,7 +5,7 @@ default:
 
   broker:
     amqp:
-      exchange: "recurring-payments"
+      exchange: "recurring-payments" 
       username:
       password:
       host: localhost:5672

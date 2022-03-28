@@ -10,5 +10,4 @@ const handler = module.exports = {};
  */
 handler.createMandate = async ({message}) => {
   // Implement your business logic here...
-  console.log("command received by the handler!, ", message.payload)
 };
